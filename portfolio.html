@@ -1,0 +1,1707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PLAYER_ONE.EXE — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --neon-green: #c3a825;
+    --neon-pink: #ff2d78;
+    --neon-purple: #bf00ff;
+    --neon-cyan: #00f5ff;
+    --neon-yellow: #ffe600;
+    --dark-bg: #080810;
+    --dark-surface: #0f0f1a;
+    --dark-card: #13132a;
+    --border-glow: #1e1e3f;
+    --text-main: #e0e0ff;
+    --text-muted: #8888aa;
+    --pixel-font: 'Press Start 2P', monospace;
+    --vt-font: 'VT323', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; overflow-x: hidden; }
+
+  body {
+    background: var(--dark-bg);
+    color: var(--text-main);
+    font-family: var(--pixel-font);
+    font-size: 13px;
+    line-height: 1.8;
+    overflow-x: hidden;
+    cursor: crosshair;
+  }
+
+  /* SCANLINE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.08) 2px,
+      rgba(0,0,0,0.08) 4px
+    );
+    pointer-events: none;
+    z-index: 9998;
+  }
+
+  /* CRT VIGNETTE */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.7) 100%);
+    pointer-events: none;
+    z-index: 9997;
+  }
+
+  /* ===== SCROLLBAR ===== */
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: var(--dark-bg); }
+  ::-webkit-scrollbar-thumb { background: var(--neon-purple); border-radius: 0; }
+
+  /* ===== NAV ===== */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    background: rgba(8,8,16,0.92);
+    border-bottom: 2px solid var(--neon-purple);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    height: 56px;
+  }
+
+  .nav-logo {
+    font-family: var(--pixel-font);
+    font-size: 11px;
+    color: var(--neon-green);
+    text-shadow: 0 0 10px var(--neon-green);
+    letter-spacing: 1px;
+  }
+
+  .nav-logo span {
+    animation: blink 1s step-end infinite;
+    color: var(--neon-pink);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 9px;
+    letter-spacing: 1px;
+    transition: color 0.2s;
+    position: relative;
+  }
+
+  .nav-links a:hover {
+    color: var(--neon-cyan);
+    text-shadow: 0 0 8px var(--neon-cyan);
+  }
+
+  .nav-links a::before {
+    content: '> ';
+    color: var(--neon-pink);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .nav-links a:hover::before { opacity: 1; }
+
+  /* ===== SECTIONS ===== */
+  section {
+    min-height: 100vh;
+    padding: 100px 2rem 4rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-title {
+    font-family: var(--pixel-font);
+    font-size: 18px;
+    color: var(--neon-pink);
+    text-shadow: 0 0 12px var(--neon-pink), 0 0 24px rgba(255,45,120,0.4);
+    margin-bottom: 0.5rem;
+    letter-spacing: 2px;
+  }
+
+  .section-divider {
+    height: 3px;
+    background: linear-gradient(90deg, var(--neon-pink), var(--neon-purple), transparent);
+    margin-bottom: 3rem;
+    position: relative;
+  }
+
+  .section-divider::before {
+    content: '';
+    position: absolute;
+    left: 0; top: -1px;
+    width: 12px; height: 5px;
+    background: var(--neon-pink);
+    animation: scanDot 3s linear infinite;
+  }
+
+  @keyframes scanDot {
+    0% { left: 0; }
+    100% { left: 100%; }
+  }
+
+  /* ===== HERO ===== */
+  #home {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding-top: 56px;
+    position: relative;
+  }
+
+  .hero-label {
+    font-family: var(--pixel-font);
+    font-size: 9px;
+    color: var(--neon-cyan);
+    text-shadow: 0 0 8px var(--neon-cyan);
+    letter-spacing: 3px;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-title {
+    font-family: var(--pixel-font);
+    font-size: clamp(20px, 4vw, 38px);
+    color: var(--neon-green);
+    text-shadow: 0 0 16px var(--neon-green), 0 0 40px rgba(57,255,20,0.3);
+    line-height: 1.4;
+    margin-bottom: 1rem;
+    letter-spacing: 2px;
+  }
+
+  .hero-title .glitch {
+    position: relative;
+    display: inline-block;
+    animation: glitch 4s infinite;
+  }
+
+  @keyframes glitch {
+    0%, 90%, 100% { transform: translate(0); }
+    91% { transform: translate(-3px, 1px); color: var(--neon-pink); }
+    92% { transform: translate(3px, -1px); color: var(--neon-cyan); }
+    93% { transform: translate(0); }
+  }
+
+  .hero-subtitle {
+    font-family: var(--vt-font);
+    font-size: 22px;
+    color: var(--text-muted);
+    margin-bottom: 2.5rem;
+    max-width: 580px;
+    letter-spacing: 1px;
+  }
+
+  .typed-cursor {
+    display: inline-block;
+    width: 10px;
+    height: 18px;
+    background: var(--neon-green);
+    vertical-align: middle;
+    margin-left: 4px;
+    animation: blink 0.8s step-end infinite;
+  }
+
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .hero-stats {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+  }
+
+  .stat-box {
+    border: 1px solid var(--border-glow);
+    padding: 0.75rem 1.25rem;
+    position: relative;
+    background: var(--dark-surface);
+  }
+
+  .stat-box::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: -1px; right: -1px; bottom: -1px;
+    border: 1px solid var(--neon-purple);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .stat-box:hover::before { opacity: 1; }
+
+  .stat-num {
+    font-size: 20px;
+    color: var(--neon-yellow);
+    text-shadow: 0 0 8px var(--neon-yellow);
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .stat-label {
+    font-size: 8px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+  }
+
+  /* ===== BUTTONS ===== */
+  .hero-btns {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    position: relative;
+  }
+
+  .pixel-btn {
+    font-family: var(--pixel-font);
+    font-size: 10px;
+    padding: 14px 24px;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 1px;
+    position: relative;
+    transition: transform 0.1s;
+    outline: none;
+    user-select: none;
+    overflow: visible;
+  }
+
+  .pixel-btn:active { transform: translate(2px, 2px); }
+
+  .btn-projects {
+    background: var(--neon-green);
+    color: #000;
+    box-shadow: 4px 4px 0 #1a7a00, 0 0 20px rgba(57,255,20,0.4);
+  }
+
+  .btn-projects:hover {
+    box-shadow: 6px 6px 0 #1a7a00, 0 0 30px rgba(57,255,20,0.6);
+    transform: translate(-2px, -2px);
+  }
+
+  .btn-resume {
+    background: var(--neon-pink);
+    color: #fff;
+    box-shadow: 4px 4px 0 #7a003c, 0 0 20px rgba(255,45,120,0.4);
+  }
+
+  .btn-resume:hover {
+    box-shadow: 6px 6px 0 #7a003c, 0 0 30px rgba(255,45,120,0.6);
+    transform: translate(-2px, -2px);
+  }
+
+  /* Corner brackets on buttons */
+  .pixel-btn::before, .pixel-btn::after {
+    content: '';
+    position: absolute;
+    width: 8px; height: 8px;
+    border-color: rgba(255,255,255,0.5);
+    border-style: solid;
+  }
+
+  .pixel-btn::before {
+    top: -2px; left: -2px;
+    border-width: 2px 0 0 2px;
+  }
+
+  .pixel-btn::after {
+    bottom: -2px; right: -2px;
+    border-width: 0 2px 2px 0;
+  }
+
+  /* ===== PIXEL CAR ===== */
+  #pixel-car {
+    position: fixed;
+    display: none;
+    z-index: 5000;
+    pointer-events: none;
+    width: 64px;
+    height: 36px;
+  }
+
+  /* ===== PIXEL TANK ===== */
+  #pixel-tank {
+    position: fixed;
+    display: none;
+    z-index: 5000;
+    pointer-events: none;
+    width: 72px;
+    height: 44px;
+  }
+
+  /* ===== MISSILE ===== */
+  #pixel-missile {
+    position: fixed;
+    display: none;
+    z-index: 5000;
+    pointer-events: none;
+    width: 40px;
+    height: 12px;
+  }
+
+  /* ===== EXPLOSION ===== */
+  #explosion {
+    position: fixed;
+    display: none;
+    z-index: 5001;
+    pointer-events: none;
+    width: 120px;
+    height: 120px;
+    transform: translate(-50%, -50%);
+  }
+
+  /* ===== RESUME MODAL ===== */
+  #resume-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 6000;
+    background: rgba(0,0,0,0.85);
+    align-items: center;
+    justify-content: center;
+  }
+
+  #resume-modal.active { display: flex; }
+
+  .modal-window {
+    background: var(--dark-card);
+    border: 2px solid var(--neon-pink);
+    box-shadow: 0 0 40px rgba(255,45,120,0.5), inset 0 0 20px rgba(255,45,120,0.05);
+    max-width: 680px;
+    width: 90%;
+    max-height: 85vh;
+    overflow-y: auto;
+    animation: modalDrop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+  }
+
+  @keyframes modalDrop {
+    0% { transform: scale(0.3) rotate(-5deg); opacity: 0; }
+    100% { transform: scale(1) rotate(0); opacity: 1; }
+  }
+
+  .modal-header {
+    background: var(--neon-pink);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+  }
+
+  .modal-header-title {
+    font-size: 10px;
+    color: #000;
+    letter-spacing: 1px;
+  }
+
+  .modal-close {
+    background: #000;
+    color: var(--neon-pink);
+    border: none;
+    font-family: var(--pixel-font);
+    font-size: 10px;
+    padding: 6px 10px;
+    cursor: pointer;
+    letter-spacing: 1px;
+  }
+
+  .modal-close:hover { background: #1a0008; }
+
+  .modal-body { padding: 2rem; }
+
+  .resume-section { margin-bottom: 2rem; }
+
+  .resume-section-title {
+    font-size: 10px;
+    color: var(--neon-cyan);
+    text-shadow: 0 0 8px var(--neon-cyan);
+    border-bottom: 1px solid var(--neon-cyan);
+    padding-bottom: 6px;
+    margin-bottom: 1rem;
+    letter-spacing: 2px;
+  }
+
+  .resume-name {
+    font-size: 20px;
+    color: var(--neon-green);
+    text-shadow: 0 0 10px var(--neon-green);
+    margin-bottom: 0.5rem;
+  }
+
+  .resume-tagline {
+    font-family: var(--vt-font);
+    font-size: 18px;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+  }
+
+  .resume-item { margin-bottom: 1rem; }
+
+  .resume-item-title {
+    font-size: 9px;
+    color: var(--neon-yellow);
+    margin-bottom: 2px;
+  }
+
+  .resume-item-sub {
+    font-family: var(--vt-font);
+    font-size: 16px;
+    color: var(--text-muted);
+  }
+
+  .resume-skill-chip {
+    display: inline-block;
+    font-family: var(--vt-font);
+    font-size: 15px;
+    background: rgba(57,255,20,0.1);
+    border: 1px solid var(--neon-green);
+    color: var(--neon-green);
+    padding: 2px 10px;
+    margin: 3px 3px 3px 0;
+  }
+
+  /* ===== EDUCATION ===== */
+  .edu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .edu-card {
+    background: var(--dark-card);
+    border: 1px solid var(--border-glow);
+    padding: 1.5rem;
+    position: relative;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+
+  .edu-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 0; height: 3px;
+    background: var(--neon-cyan);
+    transition: width 0.4s ease;
+  }
+
+  .edu-card:hover::after { width: 100%; }
+  .edu-card:hover {
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 20px rgba(0,245,255,0.15);
+  }
+
+  .edu-icon {
+    font-size: 24px;
+    margin-bottom: 0.75rem;
+    display: block;
+  }
+
+  .edu-degree {
+    font-size: 9px;
+    color: var(--neon-cyan);
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+  }
+
+  .edu-school {
+    font-family: var(--vt-font);
+    font-size: 20px;
+    color: var(--text-main);
+    margin-bottom: 0.25rem;
+  }
+
+  .edu-year {
+    font-family: var(--vt-font);
+    font-size: 15px;
+    color: var(--text-muted);
+  }
+
+  .edu-badge {
+    position: absolute;
+    top: 12px; right: 12px;
+    background: var(--neon-cyan);
+    color: #000000;
+    font-size: 7px;
+    padding: 4px 8px;
+    letter-spacing: 1px;
+    box-shadow: 0 0 10px rgba(191,0,255,0.5);
+  }
+
+  /* ===== SKILLS ===== */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .skill-category {
+    background: var(--dark-card);
+    border: 1px solid var(--border-glow);
+    padding: 1.5rem;
+    transition: border-color 0.3s;
+  }
+
+  .skill-category:hover { border-color: var(--neon-purple); }
+
+  .skill-cat-title {
+    font-size: 8px;
+    color: var(--neon-purple);
+    text-shadow: 0 0 8px var(--neon-purple);
+    margin-bottom: 1rem;
+    letter-spacing: 2px;
+  }
+
+  .skill-bar-wrap { margin-bottom: 10px; }
+
+  .skill-name {
+    font-family: var(--vt-font);
+    font-size: 16px;
+    color: var(--text-main);
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+
+  .skill-bar-bg {
+    height: 8px;
+    background: var(--dark-bg);
+    border: 1px solid var(--border-glow);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .skill-bar-fill {
+    height: 100%;
+    background: var(--neon-purple);
+    box-shadow: 0 0 8px var(--neon-purple);
+    animation: fillBar 1.5s ease-out forwards;
+    transform-origin: left;
+  }
+
+  @keyframes fillBar {
+    from { width: 0 !important; }
+  }
+
+  /* segmented look */
+  .skill-bar-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent, transparent 10px,
+      rgba(8,8,16,0.4) 10px, rgba(8,8,16,0.4) 12px
+    );
+  }
+
+  /* ===== PROJECTS ===== */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .project-card {
+    background: var(--dark-card);
+    border: 1px solid var(--border-glow);
+    padding: 1.5rem;
+    position: relative;
+    transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+    cursor: pointer;
+  }
+
+  .project-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--neon-green);
+    box-shadow: 0 8px 30px rgba(57,255,20,0.2);
+  }
+
+  .project-tag {
+    display: inline-block;
+    font-size: 7px;
+    background: rgba(57,255,20,0.1);
+    border: 1px solid var(--neon-green);
+    color: var(--neon-green);
+    padding: 3px 8px;
+    margin-bottom: 1rem;
+    letter-spacing: 1px;
+  }
+
+  .project-name {
+    font-size: 11px;
+    color: var(--neon-yellow);
+    margin-bottom: 0.75rem;
+    line-height: 1.6;
+  }
+
+  .project-desc {
+    font-family: var(--vt-font);
+    font-size: 17px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-bottom: 1.25rem;
+  }
+
+  .project-tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 1.25rem;
+  }
+
+  .tech-chip {
+    font-family: var(--vt-font);
+    font-size: 14px;
+    background: rgba(191,0,255,0.1);
+    border: 1px solid rgba(191,0,255,0.4);
+    color: var(--neon-purple);
+    padding: 2px 8px;
+  }
+
+  .project-links {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .project-link {
+    font-size: 8px;
+    color: var(--neon-cyan);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+
+  .project-link:hover { border-color: var(--neon-cyan); }
+
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.4); opacity: 0.6; }
+  }
+
+  /* ===== CONTACT ===== */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 0.3fr;
+    gap: 2rem;
+  }
+
+  @media (max-width: 640px) {
+    .contact-grid { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    .hero-title { font-size: 18px; }
+  }
+
+  .contact-info { display: flex; flex-direction: column; gap: 1.5rem; }
+
+  .contact-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0px;
+    background: var(--dark-card);
+    border: 1px solid var(--border-glow);
+    padding: 1.25rem;
+    transition: border-color 0.3s;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .contact-item:hover { border-color: var(--neon-pink); }
+
+  .contact-icon {
+    width: 36px; height: 36px;
+    flex-shrink: 0;
+  }
+
+  .contact-label {
+    font-size: 8px;
+    color: var(--neon-pink);
+    margin-bottom: 3px;
+    letter-spacing: 2px;
+  }
+
+  .contact-value {
+    font-family: var(--vt-font);
+    font-size: 19px;
+    color: var(--text-main);
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    border-top: 2px solid var(--border-glow);
+    font-size: 8px;
+    color: var(--text-muted);
+    line-height: 2.5;
+  }
+
+  footer span { color: var(--neon-pink); }
+
+  /* ===== STAR FIELD ===== */
+  #starfield {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+  }
+
+  .star {
+    position: absolute;
+    width: 2px; height: 2px;
+    background: #fff;
+    border-radius: 50%;
+    animation: twinkle var(--dur) ease-in-out infinite;
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.2; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.5); }
+  }
+
+  /* ===== CAR DRIVE ANIMATION ===== */
+  @keyframes carWheelSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes tankLand {
+    0% { transform: translateY(-120px); }
+    70% { transform: translateY(4px); }
+    85% { transform: translateY(-3px); }
+    100% { transform: translateY(0px); }
+  }
+
+  @keyframes missileTravel {
+    from { transform: translateX(0); }
+    to { transform: translateX(120vw); }
+  }
+
+  @keyframes explode {
+    0% { transform: translate(-50%,-50%) scale(0.2); opacity: 1; }
+    60% { opacity: 1; }
+    100% { transform: translate(-50%,-50%) scale(1); opacity: 0; }
+  }
+
+  /* ===== PIXEL DECORATIONS ===== */
+  .pixel-corner {
+    position: absolute;
+    width: 16px; height: 16px;
+  }
+
+  .achievement-toast {
+    position: fixed;
+    bottom: 30px; right: 30px;
+    background: var(--dark-card);
+    border: 2px solid var(--neon-yellow);
+    padding: 14px 20px;
+    z-index: 5500;
+    display: none;
+    animation: toastIn 0.4s ease;
+    box-shadow: 0 0 20px rgba(255,230,0,0.3);
+  }
+
+  @keyframes toastIn {
+    from { transform: translateX(120%); }
+    to { transform: translateX(0); }
+  }
+
+  .achievement-title {
+    font-size: 7px;
+    color: var(--neon-yellow);
+    margin-bottom: 4px;
+    letter-spacing: 2px;
+  }
+
+  .achievement-text {
+    font-family: var(--vt-font);
+    font-size: 16px;
+    color: var(--text-main);
+  }
+
+  /* HP Bar decoration */
+  .hp-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+  }
+
+  .hp-label { font-size: 8px; color: var(--neon-green); }
+
+  .hp-track {
+    flex: 1;
+    min-width: 180px;
+    height: 12px;
+    background: var(--dark-bg);
+    border: 1px solid var(--neon-green);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .hp-fill {
+    width: 78%;
+    height: 100%;
+    background: var(--neon-green);
+    box-shadow: 0 0 8px var(--neon-green);
+    position: relative;
+    animation: hpPulse 3s ease-in-out infinite;
+  }
+
+  @keyframes hpPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  .hp-track::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent, transparent 14px,
+      rgba(8,8,16,0.5) 14px, rgba(8,8,16,0.5) 16px
+    );
+  }
+</style>
+</head>
+<body>
+
+<!-- STAR FIELD -->
+<div id="starfield"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">PLAYER_ONE<span>_</span></div>
+  <ul class="nav-links">
+    <li><a href="#home">HOME</a></li>
+    <li><a href="#education">EDU</a></li>
+    <li><a href="#skills">SKILLS</a></li>
+    <li><a href="#projects">PROJECTS</a></li>
+    <li><a href="#contact">CONTACT</a></li>
+  </ul>
+</nav>
+
+<!-- ANIMATED CAR (SVG pixel art) -->
+<div id="pixel-car">
+  <svg viewBox="0 0 64 36" xmlns="http://www.w3.org/2000/svg">
+    <!-- Body -->
+    <rect x="4" y="14" width="56" height="14" fill="#39ff14"/>
+    <!-- Roof cabin -->
+    <rect x="14" y="6" width="30" height="10" fill="#2acc00"/>
+    <!-- Windows -->
+    <rect x="17" y="8" width="10" height="7" fill="#00f5ff" opacity="0.8"/>
+    <rect x="31" y="8" width="10" height="7" fill="#00f5ff" opacity="0.8"/>
+    <!-- Bumpers -->
+    <rect x="0" y="18" width="6" height="6" fill="#1a8a00"/>
+    <rect x="58" y="18" width="6" height="6" fill="#1a8a00"/>
+    <!-- Exhaust puff -->
+    <circle cx="2" cy="26" r="3" fill="#aaa" opacity="0.4"/>
+    <circle cx="58" cy="26" r="3" fill="#ff9900" opacity="0.7"/>
+    <!-- Wheels (will be animated) -->
+    <g id="wheel-fl" transform="translate(12,28)">
+      <circle r="7" fill="#222"/>
+      <circle r="4" fill="#555"/>
+      <line x1="-4" y1="0" x2="4" y2="0" stroke="#888" stroke-width="1.5"/>
+      <line x1="0" y1="-4" x2="0" y2="4" stroke="#888" stroke-width="1.5"/>
+    </g>
+    <g id="wheel-rl" transform="translate(46,28)">
+      <circle r="7" fill="#222"/>
+      <circle r="4" fill="#555"/>
+      <line x1="-4" y1="0" x2="4" y2="0" stroke="#888" stroke-width="1.5"/>
+      <line x1="0" y1="-4" x2="0" y2="4" stroke="#888" stroke-width="1.5"/>
+    </g>
+    <!-- Headlight -->
+    <rect x="58" y="16" width="4" height="4" fill="#ffe600"/>
+    <!-- Pixel detail lines -->
+    <rect x="4" y="14" width="56" height="2" fill="#2acc00" opacity="0.5"/>
+  </svg>
+</div>
+
+<!-- ANIMATED TANK (SVG pixel art) -->
+<div id="pixel-tank">
+  <svg viewBox="0 0 72 44" xmlns="http://www.w3.org/2000/svg">
+    <!-- Tracks -->
+    <rect x="0" y="28" width="72" height="14" rx="6" fill="#333" stroke="#555" stroke-width="1"/>
+    <rect x="4" y="30" width="64" height="10" rx="4" fill="#444"/>
+    <!-- Track detail -->
+    <rect x="8" y="31" width="8" height="8" fill="#2a2a2a"/>
+    <rect x="20" y="31" width="8" height="8" fill="#2a2a2a"/>
+    <rect x="32" y="31" width="8" height="8" fill="#2a2a2a"/>
+    <rect x="44" y="31" width="8" height="8" fill="#2a2a2a"/>
+    <rect x="56" y="31" width="8" height="8" fill="#2a2a2a"/>
+    <!-- Hull -->
+    <rect x="8" y="18" width="56" height="14" fill="#556b2f"/>
+    <!-- Turret -->
+    <rect x="20" y="8" width="28" height="14" rx="2" fill="#4a5e28"/>
+    <!-- Barrel -->
+    <rect id="tank-barrel" x="44" y="12" width="26" height="6" fill="#3a4a20" rx="1"/>
+    <!-- Hatch -->
+    <rect x="30" y="10" width="12" height="8" fill="#3a4a20"/>
+    <circle cx="36" cy="14" r="3" fill="#2a3a18"/>
+    <!-- Star insignia -->
+    <text x="14" y="28" font-family="monospace" font-size="10" fill="#ffe600">★</text>
+  </svg>
+</div>
+
+<!-- MISSILE -->
+<div id="pixel-missile">
+  <svg viewBox="0 0 40 12" xmlns="http://www.w3.org/2000/svg">
+    <!-- Body -->
+    <rect x="6" y="3" width="26" height="6" fill="#ffe600"/>
+    <!-- Nose cone -->
+    <polygon points="32,3 32,9 40,6" fill="#ff6600"/>
+    <!-- Fins -->
+    <polygon points="6,3 0,0 4,3" fill="#ff6600"/>
+    <polygon points="6,9 0,12 4,9" fill="#ff6600"/>
+    <!-- Trail -->
+    <rect x="0" y="4" width="6" height="4" fill="#ff4400" opacity="0.6"/>
+    <circle cx="2" cy="6" r="3" fill="#ff9900" opacity="0.4"/>
+  </svg>
+</div>
+
+<!-- EXPLOSION -->
+<div id="explosion">
+  <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" id="explosion-svg">
+    <!-- Burst rays -->
+    <g transform="translate(60,60)">
+      <polygon points="0,-50 5,-20 -5,-20" fill="#ffe600" opacity="0.9"/>
+      <polygon points="0,-50 5,-20 -5,-20" fill="#ffe600" opacity="0.9" transform="rotate(45)"/>
+      <polygon points="0,-50 5,-20 -5,-20" fill="#ff6600" opacity="0.9" transform="rotate(90)"/>
+      <polygon points="0,-50 5,-20 -5,-20" fill="#ff6600" opacity="0.9" transform="rotate(135)"/>
+      <polygon points="0,-50 5,-20 -5,-20" fill="#ffe600" opacity="0.9" transform="rotate(180)"/>
+      <polygon points="0,-50 5,-20 -5,-20" fill="#ff9900" opacity="0.9" transform="rotate(225)"/>
+      <polygon points="0,-50 5,-20 -5,-20" fill="#ff6600" opacity="0.9" transform="rotate(270)"/>
+      <polygon points="0,-50 5,-20 -5,-20" fill="#ff9900" opacity="0.9" transform="rotate(315)"/>
+      <!-- Inner burst -->
+      <polygon points="0,-34 4,-14 -4,-14" fill="#fff" transform="rotate(22.5)"/>
+      <polygon points="0,-34 4,-14 -4,-14" fill="#fff" transform="rotate(67.5)"/>
+      <polygon points="0,-34 4,-14 -4,-14" fill="#fff" transform="rotate(112.5)"/>
+      <polygon points="0,-34 4,-14 -4,-14" fill="#fff" transform="rotate(157.5)"/>
+      <polygon points="0,-34 4,-14 -4,-14" fill="#fff" transform="rotate(202.5)"/>
+      <polygon points="0,-34 4,-14 -4,-14" fill="#fff" transform="rotate(247.5)"/>
+      <polygon points="0,-34 4,-14 -4,-14" fill="#fff" transform="rotate(292.5)"/>
+      <polygon points="0,-34 4,-14 -4,-14" fill="#fff" transform="rotate(337.5)"/>
+      <!-- Core -->
+      <circle r="22" fill="#fff"/>
+      <circle r="16" fill="#ffe600"/>
+      <circle r="10" fill="#fff"/>
+      <!-- Pixel sparks -->
+      <rect x="-40" y="-4" width="8" height="8" fill="#ffe600" opacity="0.8"/>
+      <rect x="32" y="-4" width="8" height="8" fill="#ffe600" opacity="0.8"/>
+      <rect x="-4" y="-40" width="8" height="8" fill="#ff6600" opacity="0.8"/>
+      <rect x="-4" y="32" width="8" height="8" fill="#ff6600" opacity="0.8"/>
+      <rect x="22" y="-32" width="6" height="6" fill="#ff9900"/>
+      <rect x="-28" y="22" width="6" height="6" fill="#ff9900"/>
+      <rect x="22" y="26" width="6" height="6" fill="#fff"/>
+      <rect x="-28" y="-30" width="6" height="6" fill="#fff"/>
+    </g>
+    <!-- BOOM text -->
+    <text x="60" y="115" font-family="monospace" font-size="11" font-weight="bold" fill="#ffe600" text-anchor="middle">BOOM!</text>
+  </svg>
+</div>
+
+<!-- RESUME MODAL -->
+<div id="resume-modal">
+  <div class="modal-window">
+    <div class="modal-header">
+      <span class="modal-header-title">>> RESUME.EXE</span>
+      <button class="modal-close" id="modal-close-btn">CLOSE</button>
+    </div>
+    <div class="modal-body">
+      <div class="resume-section">
+        <div class="resume-name">Priyansh Sharma</div>
+        <div class="resume-tagline">Data Analyst</div>
+        <div style="font-family:var(--vt-font);font-size:15px;color:var(--text-muted);line-height:1.8">
+          📍 Loni, Uttar Pradesh &nbsp;|&nbsp; 📧 priyanshsharma0695@gmail.com &nbsp;|&nbsp; 🔗 github.com/priyanshsharma06
+        </div>
+      </div>
+      <div class="resume-section">
+        <div class="resume-section-title">&gt; EDUCATION</div>
+        <div class="resume-item">
+          <div class="resume-item-title">BACHELOR OF COMMERCE — DELHI UNIVERSITY</div>
+          <div class="resume-item-sub">2023 – 2026 &nbsp;|&nbsp; - Strong foundation in finance, statistics, analytics and data-driven decision making.</div>
+        </div>
+          <div class="resume-item">
+          <div class="resume-item-title">Data Analytics — IIT Guwahati</div>
+          <div class="resume-item-sub">JULY 2025 – MAY 2026 &nbsp;|&nbsp; - Developed skills in Python, SQL, statistics (Hypothesis Testing, Regressions), data visualization, and business analytics for data-driven decision making.</div>
+        </div>
+          <div class="resume-item">
+          <div class="resume-item-title">Data Science — Analytix Labs</div>
+          <div class="resume-item-sub">JULY 2025 – MAY 2026 &nbsp;|&nbsp; - Developed skills in Machine Learning, statistics, Decision Trees, Logistic Regression and business analytics for data-driven decision making.</div>
+        </div>
+      </div>
+      <div class="resume-section">
+        <div class="resume-section-title">&gt; SKILLS</div>
+        <div>
+          <span class="resume-skill-chip">Pandas</span>
+          <span class="resume-skill-chip">NumPy</span>
+          <span class="resume-skill-chip">Microsoft SQL Server / MySQL</span>
+          <span class="resume-skill-chip">Generative AI</span>
+          <span class="resume-skill-chip">Python</span>
+          <span class="resume-skill-chip">EDA</span>
+          <span class="resume-skill-chip">Power BI / Tableau</span>
+          <span class="resume-skill-chip">Statistics</span>
+          <span class="resume-skill-chip">Excel</span>
+          <span class="resume-skill-chip">Visualizations</span>
+          <span class="resume-skill-chip">Dashboarding</span>
+          <span class="resume-skill-chip">Linear Regression</span>
+          <span class="resume-skill-chip">Logistic Regression</span>
+        </div>
+      </div>
+      <div class="resume-section">
+        <div class="resume-section-title">&gt; ACHIEVEMENTS</div>
+        <div class="resume-item">
+          <div class="resume-item-sub">🏆 - Completed Deloitte Australia Data Analytics Job Simulation demonstrating practical application of analytics in consulting scenarios</div>
+          <div class="resume-item-sub"> </div>
+          <div class="resume-item-sub"> </div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:1.5rem">
+        <a href="priyansh sharma.pdf" style="font-family:var(--pixel-font);font-size:8px;color:var(--neon-green);text-decoration:none;border:1px solid var(--neon-green);padding:10px 20px;display:inline-block;box-shadow:0 0 10px rgba(57,255,20,0.3)" onclick="return true">
+          ▼ DOWNLOAD PDF VERSION
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ACHIEVEMENT TOAST -->
+<div class="achievement-toast" id="achievement-toast">
+  <div class="achievement-title">🏆 ACHIEVEMENT UNLOCKED</div>
+  <div class="achievement-text" id="achievement-text">Secret discovered!</div>
+</div>
+
+<!-- ====================== SECTIONS ====================== -->
+
+<!-- HOME -->
+<section id="home">
+  <div class="hero-label">&gt;&gt; INITIALIZING PORTFOLIO.EXE ...</div>
+  <div class="hero-title">
+    <div>HI, I'M</div>
+    <div class="glitch">PRIYANSH SHARMA</div>
+    <div style="color:var(--neon-cyan);text-shadow:0 0 16px var(--neon-cyan)">Data Analyst,</div>
+    <div>Problem Solver<span id="typed-out"></span><span class="typed-cursor"></span></div>
+  </div>
+
+  <div class="hero-subtitle">
+    Turning Data into Insights<br>
+    caffeine-fueled creativity.<br>
+    Driving smarter decisions.
+  </div>
+
+  <div class="hp-bar">
+    <span class="hp-label">HP</span>
+    <div class="hp-track"><div class="hp-fill"></div></div>
+    <span class="hp-label" style="color:var(--neon-yellow)">78 / 100</span>
+    <span class="hp-label" style="margin-left:1rem">LVL</span>
+    <span class="hp-label" style="color:var(--neon-pink)">07</span>
+    <span class="hp-label" style="margin-left:1rem">XP</span>
+    <span class="hp-label" style="color:var(--neon-cyan)">6200 / 8000</span>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat-box">
+      <span class="stat-num">Fresher</span>
+      <span class="stat-label">YEARS EXP</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-num">30+</span>
+      <span class="stat-label">PROJECTS</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-num">∞</span>
+      <span class="stat-label">COFFEE ☕</span>
+    </div>
+  </div>
+
+  <div class="hero-btns">
+    <button class="pixel-btn btn-projects" id="btn-projects">▶ VIEW PROJECTS</button>
+    <button class="pixel-btn btn-resume" id="btn-resume">⚙ VIEW RESUME</button>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="section-title">&gt; EDUCATION.LOG</div>
+  <div class="section-divider"></div>
+  <div class="edu-grid">
+    <div class="edu-card">
+      <div class="edu-badge">Completed</div>
+      <span class="edu-icon">🎓</span>
+      <div class="edu-degree">BACHELOR OF COMMERCE</div>
+      <div class="edu-school">Delhi University</div>
+      <div class="edu-year">2023 – 2026</div>
+      <div style="font-family:var(--vt-font);font-size:15px;color:var(--text-muted);margin-top:0.75rem;line-height:1.6">
+        - Strong foundation in finance, statistics, analytics and data-driven decision making.
+      </div>
+    </div>
+    <div class="edu-card">
+      <div class="edu-badge" style="background:var(--neon-cyan);color:#000">ONGOING</div>
+      <span class="edu-icon">📜</span>
+      <div class="edu-degree">Data Analytics</div>
+      <div class="edu-school">IIT Guwahati</div>
+      <div class="edu-year">2026 &nbsp;|&nbsp; Professional Level</div>
+      <div style="font-family:var(--vt-font);font-size:15px;color:var(--text-muted);margin-top:0.75rem;line-height:1.6">
+        - Developed skills in Python, SQL, statistics, data visualization, and business analytics for data-driven decision making.
+      </div>
+    </div>
+    <div class="edu-card">
+      <div class="edu-badge">COMPLETED</div>
+      <span class="edu-icon">🏆</span>
+      <div class="edu-degree">Deloitte Australia Data Analytics Job Simulation</div>
+      <div class="edu-school">Deloitte Australia / Forage</div>
+      <div class="edu-year">2026 &nbsp;|&nbsp; Professional Level</div>
+      <div style="font-family:var(--vt-font);font-size:15px;color:var(--text-muted);margin-top:0.75rem;line-height:1.6">
+        - Gained hands-on experience in data analysis, visualization, and business intelligence.
+      </div>
+    </div>
+    <div class="edu-card">
+      <div class="edu-badge">Ongoing</div>
+      <span class="edu-icon">📜</span>
+      <div class="edu-degree">Data Science</div>
+      <div class="edu-school">Analytix Labs</div>
+      <div class="edu-year">2026 &nbsp;|&nbsp; Professional Level</div>
+      <div style="font-family:var(--vt-font);font-size:15px;color:var(--text-muted);margin-top:0.75rem;line-height:1.6">
+        - Developed skills in Machine Learning, statistics, Decision Trees, Logistic Regression and business analytics for data-driven decision making.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-title">&gt; SKILLS.DAT</div>
+  <div class="section-divider"></div>
+  <div class="skills-grid">
+    <div class="skill-category">
+      <div class="skill-cat-title">// Libraries</div>
+      <div class="skill-bar-wrap">
+        <div class="skill-name"><span>Pandas</span><span style="color:var(--neon-purple)"></span></div>
+        <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:90%"></div></div>
+      </div>
+      <div class="skill-bar-wrap">
+        <div class="skill-name"><span>NumPy</span><span style="color:var(--neon-purple)"></span></div>
+        <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:80%"></div></div>
+      </div>
+    </div>
+    <div class="skill-category">
+      <div class="skill-cat-title">// Generative AI</div>
+      <div class="skill-bar-wrap">
+        <div class="skill-name"><span>Pandas</span><span style="color:var(--neon-purple)"></span></div>
+        <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:90%"></div></div>
+      </div>
+      <div class="skill-bar-wrap">
+        <div class="skill-name"><span>NumPy</span><span style="color:var(--neon-purple)"></span></div>
+        <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:80%"></div></div>
+      </div>
+    </div>
+    <div class="skill-category">
+      <div class="skill-cat-title">// Visualizations</div>
+      <div class="skill-bar-wrap">
+        <div class="skill-name"><span>Power BI</span><span style="color:var(--neon-purple)"></span></div>
+        <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:85%"></div></div>
+      </div>
+      <div class="skill-bar-wrap">
+        <div class="skill-name"><span>Tableau</span><span style="color:var(--neon-purple)"></span></div>
+        <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:72%"></div></div>
+      </div>
+
+    </div>
+    
+    <div class="skill-category">
+      <div class="skill-cat-title">// Databases</div>
+      <div class="skill-bar-wrap">
+        <div class="skill-name"><span>Microsoft SQL Server</span><span style="color:var(--neon-purple)"></span></div>
+        <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:85%"></div></div>
+      </div>
+      <div class="skill-bar-wrap">
+        <div class="skill-name"><span>MySQL</span><span style="color:var(--neon-purple)"></span></div>
+        <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:72%"></div></div>
+      </div>
+    </div>
+    <div class="skill-category">
+      <div class="skill-cat-title">// Statistics</div>
+      <div class="skill-bar-wrap">
+        <div class="skill-name"><span>Hypothesis Testing</span><span style="color:var(--neon-purple)"></span></div>
+        <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:74%"></div></div>
+      </div>
+      <div class="skill-bar-wrap">
+        <div class="skill-name"><span>Linear Regression</span><span style="color:var(--neon-purple)"></span></div>
+        <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:72%"></div></div>
+      </div>
+      <div class="skill-bar-wrap">
+        <div class="skill-name"><span>Logistic Regression</span><span style="color:var(--neon-purple)"></span></div>
+        <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:68%"></div></div>
+      </div>
+    </div>
+        <div class="skill-category">
+      <div class="skill-cat-title">// Business skills</div>
+      <div class="skill-bar-wrap">
+        <div class="skill-name"><span>Microsoft Excel</span><span style="color:var(--neon-purple)"></span></div>
+        <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:85%"></div></div>
+      </div>
+      <div class="skill-bar-wrap">
+        <div class="skill-name"><span>EDA</span><span style="color:var(--neon-purple)"></span></div>
+        <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:83%"></div></div>
+      </div>
+      
+
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-title">&gt; PROJECTS.EXE</div>
+  <div class="section-divider"></div>
+  <div class="projects-grid">
+    <div class="project-card">
+      <div class="project-status"></div>
+      <div class="project-name">ADVENTURE WORKS PROJECT</div>
+      <div class="project-desc">Analyzed sales, customer, and product data using the Adventure Works dataset. Built an interactive Power Bl dashboard to track KPIs, identify trends, and support data-driven business decisions.</div>
+      <div class="project-tech">
+        <span class="tech-chip">Power BI</span>
+        <span class="tech-chip">DAX</span>
+        <span class="tech-chip">KPIs</span>
+      </div>
+      <div class="project-links">
+        <a href="https://github.com/Priyanshsharma06/POWER-BI-Project" class="project-link">VIEW →</a>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-name">RETIAL CASE STUDY</div>
+      <div class="project-desc">Analyzed retail sales data using Python to
+uncover customer purchasing patterns,
+product performance, and sales trends.
+Performed data cleaning, EDA, and
+visualization to support data-driven
+business decisions.</div>
+      <div class="project-tech">
+        <span class="tech-chip">Python</span>
+        <span class="tech-chip">Pandas</span>
+        <span class="tech-chip">NumPy</span>
+        <span class="tech-chip">Matplotlib / Seaborn</span>
+        <span class="tech-chip">EDA</span>
+      </div>
+      <div class="project-links">
+        <a href="https://github.com/Priyanshsharma06/RetialCasestudy_Python" class="project-link">VIEW →</a>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-status" style="background:var(--neon-cyan);box-shadow:0 0 8px var(--neon-cyan)"></div>
+      <div class="project-name">SWIGGY ORDER DATA ANALYSIS</div>
+      <div class="project-desc">Automated dashboards using Pivot Tables and Power Query, improving reporting efficiency by 45%.</div>
+      <div class="project-tech">
+        <span class="tech-chip">Excel</span>
+        <span class="tech-chip">EDA</span>
+        <span class="tech-chip">Macros</span>
+        <span class="tech-chip">Pivot Tables</span>
+        <span class="tech-chip">Power Query</span>
+      </div>
+      <div class="project-links">
+        <a href="https://github.com/Priyanshsharma06/Excel-Project" class="project-link">VIEW →</a>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-name">STREAMING PROJECT</div>
+      <div class="project-desc">Developed advanced SQL queries to analyze subscriptions, revenue,
+content, performance, user behavior using Joins, CTEs, Window Functions, and Views.</div>
+      <div class="project-tech">
+        <span class="tech-chip">SQL</span>
+        <span class="tech-chip">Queries</span>
+        <span class="tech-chip">SSMS</span>
+        <span class="tech-chip">Window Functions</span>
+        <span class="tech-chip">SubQueries</span>
+        <span class="tech-chip">CTEs</span>
+      </div>
+      <div class="project-links">
+        <a href="https://github.com/Priyanshsharma06/Streaming_SQL_Project" class="project-link">VIEW →</a>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-name">"REGRESSION PROJECT"</div>
+      <div class="project-desc">((In Progress))</div>
+      <div class="project-tech">
+        <span class="tech-chip">EDA</span>
+        <span class="tech-chip">Pandas</span>
+        <span class="tech-chip">Numpy</span>
+        <span class="tech-chip">Sklearn</span>
+        <span class="tech-chip">F Regression</span>
+        <span class="tech-chip">Variable Reduction</span>
+        <span class="tech-chip">Data Modelling</span>
+      </div>
+      <div class="project-links">
+        <a href="#" class="project-link">VIEW →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-title">&gt; CONTACT.INIT</div>
+  <div class="section-divider"></div>
+
+  <div class="contact-grid">
+
+    <!-- LEFT SIDE -->
+    <div class="contact-info">
+
+      <div style="font-family:var(--vt-font);font-size:20px;color:var(--text-muted);line-height:1.7;margin-bottom:1rem">
+        Open to Data Analyst roles and collaborative projects. Let's connect and create meaningful data-backed solutions.
+      </div>
+
+      <!-- EMAIL -->
+      <div class="contact-item">
+        <i data-lucide="mail" class="contact-icon"></i>
+        <div>
+          <div class="contact-label">EMAIL</div>
+          <div class="contact-value">priyanshsharma0695@gmail.com</div>
+        </div>
+      </div>
+
+      <!-- LINKEDIN -->
+      <div class="contact-item">
+        <i data-lucide="linkedin" class="contact-icon"></i>
+        <div>
+          <div class="contact-label">LINKEDIN</div>
+          <div class="contact-value">linkedin.com/in/priyanshsharma0695</div>
+        </div>
+      </div>
+
+      <!-- GITHUB -->
+      <div class="contact-item">
+        <i data-lucide="github" class="contact-icon"></i>
+        <div>
+          <div class="contact-label">GITHUB</div>
+          <div class="contact-value">github.com/Priyanshsharma06</div>
+        </div>
+      </div>
+
+      <!-- LOCATION -->
+      <div class="contact-item">
+        <i data-lucide="map-pin" class="contact-icon"></i>
+        <div>
+          <div class="contact-label">LOCATION</div>
+          <div class="contact-value">Loni, Uttar Pradesh</div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <div style="font-size:16px;margin-bottom:1rem">⬆⬆⬇⬇⬅➡⬅➡</div>
+  DESIGNED & CODED BY <span>PRIYANSH SHARMA</span> — 2026<br>
+  BUILT WITH <span>HTML</span> · <span>CSS</span> · <span>VANILLA JS</span><br>
+  <span style="color:var(--neon-green)">ALL RIGHTS RESERVED · INSERT COIN TO CONTINUE</span>
+</footer>
+
+<script>
+/* ========= STARFIELD ========= */
+(function() {
+  const sf = document.getElementById('starfield');
+  for (let i = 0; i < 120; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.cssText = `
+      left:${Math.random()*100}%;
+      top:${Math.random()*100}%;
+      --dur:${1.5 + Math.random()*3}s;
+      animation-delay:${Math.random()*3}s;
+      opacity:${0.1 + Math.random()*0.5};
+    `;
+    sf.appendChild(s);
+  }
+})();
+
+/* ========= TYPED EFFECT ========= */
+(function() {
+  const words = [' & Storyteller', ' & Optimizer', ' & Visualizer', ' & Insight Analyst'];
+  let wi = 0, ci = 0, del = false;
+  const el = document.getElementById('typed-out');
+  function type() {
+    const w = words[wi];
+    if (!del) {
+      el.textContent = w.slice(0, ++ci);
+      if (ci === w.length) { del = true; setTimeout(type, 1800); return; }
+    } else {
+      el.textContent = w.slice(0, --ci);
+      if (ci === 0) { del = false; wi = (wi+1) % words.length; }
+    }
+    setTimeout(type, del ? 60 : 100);
+  }
+  type();
+})();
+
+/* ========= ACHIEVEMENT TOAST ========= */
+function showAchievement(text) {
+  const t = document.getElementById('achievement-toast');
+  const tx = document.getElementById('achievement-text');
+  tx.textContent = text;
+  t.style.display = 'block';
+  setTimeout(() => { t.style.display = 'none'; }, 3000);
+}
+
+/* ========= CAR ANIMATION (View Projects) ========= */
+document.getElementById('btn-projects').addEventListener('click', function() {
+  const btn = this;
+  const car = document.getElementById('pixel-car');
+  const rect = btn.getBoundingClientRect();
+
+  showAchievement('Road trip to Projects section!');
+
+  /* Position car at button */
+  car.style.cssText = `
+    display: block;
+    position: fixed;
+    left: ${rect.left}px;
+    top: ${rect.top - 40}px;
+    width: 80px;
+    height: 45px;
+    z-index: 5000;
+    pointer-events: none;
+    transform: rotate(90deg);
+    transition: none;
+  `;
+
+  /* Animate wheels */
+  let wheelAngle = 0;
+  const wheelInterval = setInterval(() => {
+    wheelAngle += 20;
+    const fl = car.querySelector('#wheel-fl');
+    const rl = car.querySelector('#wheel-rl');
+    if (fl) fl.setAttribute('transform', `translate(12,28) rotate(${wheelAngle})`);
+    if (rl) rl.setAttribute('transform', `translate(46,28) rotate(${wheelAngle})`);
+  }, 30);
+
+  /* Small bounce off button */
+  car.style.transition = 'transform 0.2s, top 0.2s';
+  setTimeout(() => {
+    car.style.top = (rect.top - 50) + 'px';
+  }, 50);
+
+  /* Start driving down and scroll */
+  const projectsSection = document.getElementById('projects');
+  const projectsTop = projectsSection.getBoundingClientRect().top + window.scrollY;
+  const startScrollY = window.scrollY;
+  const startCarTop = rect.top - 40;
+  const endCarTop = window.innerHeight - 60;
+  const duration = 8000;
+  let startTime = null;
+
+  function animateCarAndScroll(ts) {
+    if (!startTime) startTime = ts;
+    const progress = Math.min((ts - startTime) / duration, 1);
+    const ease = progress < 0.5 ? 2*progress*progress : -1+(4-2*progress)*progress;
+
+    /* Move car downward on screen */
+    const currentTop = startCarTop + (endCarTop - startCarTop) * ease;
+    car.style.top = currentTop + 'px';
+
+    /* Scroll the page alongside */
+    const scrollTarget = startScrollY + (projectsTop - startScrollY) * ease;
+    window.scrollTo({ top: scrollTarget, behavior: 'instant' });
+
+    if (progress < 1) {
+      requestAnimationFrame(animateCarAndScroll);
+    } else {
+      /* Car drives off screen */
+      clearInterval(wheelInterval);
+      car.style.transition = 'top 0.5s ease-in, opacity 0.5s ease-in';
+      car.style.top = (window.innerHeight + 60) + 'px';
+      car.style.opacity = '0';
+      setTimeout(() => {
+        car.style.display = 'none';
+        car.style.opacity = '1';
+        car.style.transition = 'none';
+      }, 600);
+    }
+  }
+
+  requestAnimationFrame(animateCarAndScroll);
+});
+
+/* ========= TANK / MISSILE / EXPLOSION ANIMATION (View Resume) ========= */
+document.getElementById('btn-resume').addEventListener('click', function() {
+  const btn = this;
+  const tank = document.getElementById('pixel-tank');
+  const missile = document.getElementById('pixel-missile');
+  const explosion = document.getElementById('explosion');
+  const modal = document.getElementById('resume-modal');
+
+  const rect = btn.getBoundingClientRect();
+
+  showAchievement('Heavy artillery deployed!');
+
+  /* === PHASE 1: Tank drops from above === */
+  const tankTargetTop = rect.top - 40;
+  const tankLeft = rect.left + rect.width/2 - 36;
+
+  tank.style.cssText = `
+    display: block;
+    position: fixed;
+    left: ${tankLeft}px;
+    top: ${tankTargetTop - 180}px;
+    width: 72px;
+    height: 44px;
+    z-index: 5000;
+    pointer-events: none;
+    transition: none;
+  `;
+
+  /* Animate drop */
+  tank.style.transition = 'top 0.5s cubic-bezier(0.33, 0, 0.66, 1.4)';
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      tank.style.top = tankTargetTop + 'px';
+    });
+  });
+
+  /* === PHASE 2: After landing, fire missile === */
+  setTimeout(() => {
+    /* Slight landing shake */
+    tank.style.transition = 'transform 0.08s';
+    tank.style.transform = 'scaleY(0.88)';
+    setTimeout(() => { tank.style.transform = 'scaleY(1)'; }, 120);
+    setTimeout(() => { tank.style.transform = 'scaleY(0.95)'; }, 200);
+    setTimeout(() => { tank.style.transform = 'scaleY(1)'; }, 280);
+
+    /* Fire the missile */
+    setTimeout(() => {
+      const missileStartX = tankLeft + 70;
+      const missileY = tankTargetTop + 14;
+
+      missile.style.cssText = `
+        display: block;
+        position: fixed;
+        left: ${missileStartX}px;
+        top: ${missileY}px;
+        width: 50px;
+        height: 14px;
+        z-index: 5001;
+        pointer-events: none;
+        transition: none;
+      `;
+
+      /* Animate missile across screen */
+      const missileSpeed = 1200;
+      missile.style.transition = `left ${missileSpeed}ms linear`;
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          missile.style.left = (window.innerWidth - 10) + 'px';
+        });
+      });
+
+      /* === PHASE 3: Explosion at edge === */
+      setTimeout(() => {
+        missile.style.display = 'none';
+
+        /* Explosion at right edge */
+        explosion.style.cssText = `
+          display: block;
+          position: fixed;
+          right: 20px;
+          top: ${missileY + 7}px;
+          width: 140px;
+          height: 140px;
+          transform: translate(50%, -50%);
+          z-index: 5002;
+          pointer-events: none;
+          animation: explode 0.7s ease-out forwards;
+        `;
+
+        /* Screen flash effect */
+        const flash = document.createElement('div');
+        flash.style.cssText = `
+          position: fixed;
+          inset: 0;
+          background: rgba(255,230,0,0.25);
+          z-index: 5003;
+          pointer-events: none;
+          animation: none;
+        `;
+        document.body.appendChild(flash);
+        setTimeout(() => flash.remove(), 160);
+
+        /* === PHASE 4: Modal pops up === */
+        setTimeout(() => {
+          explosion.style.display = 'none';
+          tank.style.display = 'none';
+          modal.classList.add('active');
+        }, 500);
+
+      }, missileSpeed);
+
+    }, 500);
+
+  }, 560);
+});
+
+/* ========= CLOSE MODAL ========= */
+document.getElementById('modal-close-btn').addEventListener('click', function() {
+  document.getElementById('resume-modal').classList.remove('active');
+  showAchievement('Resume window closed!');
+});
+
+/* Close modal on backdrop click */
+document.getElementById('resume-modal').addEventListener('click', function(e) {
+  if (e.target === this) this.classList.remove('active');
+});
+
+/* ========= CONTACT FORM ========= */
+function handleFormSubmit() {
+  showAchievement('Message sent! +50 XP gained!');
+  document.querySelectorAll('.form-input, .form-textarea').forEach(el => el.value = '');
+}
+
+/* ========= KONAMI CODE EASTER EGG ========= */
+(function() {
+  const code = [38,38,40,40,37,39,37,39,66,65];
+  let idx = 0;
+  document.addEventListener('keydown', (e) => {
+    if (e.keyCode === code[idx]) {
+      idx++;
+      if (idx === code.length) {
+        idx = 0;
+        showAchievement('KONAMI CODE! +9999 LIVES! 🎮');
+        document.body.style.animation = 'none';
+        const flash = document.createElement('div');
+        flash.style.cssText = 'position:fixed;inset:0;background:rgba(57,255,20,0.2);z-index:9999;pointer-events:none;';
+        document.body.appendChild(flash);
+        setTimeout(() => flash.remove(), 500);
+      }
+    } else {
+      idx = code[0] === e.keyCode ? 1 : 0;
+    }
+  });
+})();
+</script>
+</body>
+</html>
